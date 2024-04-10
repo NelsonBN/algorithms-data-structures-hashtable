@@ -49,6 +49,7 @@ class HashTable<TKey, TValue>
     }
 
     private HashNode?[] _buckets;
+    private int _count;
 
 
     public HashTable(int capacity)
@@ -58,6 +59,11 @@ class HashTable<TKey, TValue>
     {
         var index = _computeHash(key);
         var node = new HashNode(key, value);
+
+        if(_count == _buckets.Length)
+        {
+            throw new InvalidOperationException("Hashtable is full");
+        }
 
         if(_buckets[index] is null)
         {
@@ -78,6 +84,8 @@ class HashTable<TKey, TValue>
 
             current.Next = node;
         }
+
+        _count++;
     }
 
     public TValue Get(TKey key)
@@ -122,6 +130,7 @@ class HashTable<TKey, TValue>
                 {
                     previous.Next = current.Next;
                 }
+                _count--;
                 return;
             }
 
