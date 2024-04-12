@@ -10,8 +10,8 @@ hashtable.Add(4, new("Eva", "eva@email.fk"));
 hashtable.Add(0, new("Bob", "bob@email.fk"));
 hashtable.Add(1, new("Sue", "sue@email.fk"));
 hashtable.Add(2, new("Ana", "ana@email.fk"));
-hashtable.Add(5, new("Max", "max@email.fk"));
-hashtable.Add(6, new("Jon", "jon@email.fk"));
+//hashtable.Add(5, new("Max", "max@email.fk"));
+//hashtable.Add(6, new("Jon", "jon@email.fk"));
 
 Console.WriteLine(hashtable.Get(0));
 Console.WriteLine(hashtable.Get(1));
@@ -58,13 +58,13 @@ class HashTable<TKey, TValue>
     public void Add(TKey key, TValue value)
     {
         var index = _computeHash(key);
-        var node = new HashNode(key, value);
 
         if(_count == _buckets.Length)
         {
             throw new InvalidOperationException("Hashtable is full");
         }
 
+        var node = new HashNode(key, value);
         if(_buckets[index] is null)
         {
             _buckets[index] = node;
@@ -72,14 +72,19 @@ class HashTable<TKey, TValue>
         else
         {
             var current = _buckets[index];
-            while(current.Next is not null)
-            {
-                current = current.Next;
-            }
-
             if(current.Key.Equals(key))
             {
                 throw new InvalidOperationException("Key already exists");
+            }
+
+            while(current.Next is not null)
+            {
+                current = current.Next;
+
+                if(current.Key.Equals(key))
+                {
+                    throw new InvalidOperationException("Key already exists");
+                }
             }
 
             current.Next = node;
