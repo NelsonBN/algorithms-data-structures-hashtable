@@ -71,14 +71,19 @@ class HashTable<TKey, TValue>
         else
         {
             var current = _buckets[index];
-            while(current.Next is not null)
-            {
-                current = current.Next;
-            }
-
             if(current.Key.Equals(key))
             {
                 throw new InvalidOperationException("Key already exists");
+            }
+
+            while(current.Next is not null)
+            {
+                current = current.Next;
+
+                if(current.Key.Equals(key))
+                {
+                    throw new InvalidOperationException("Key already exists");
+                }
             }
 
             current.Next = node;
